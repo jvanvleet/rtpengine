@@ -247,6 +247,9 @@ struct rtcp_process_ctx {
 	// Homer stats
 	GString *json;
 	int json_init_len;
+
+	// verdict
+	int discard:1;
 };
 // all available methods
 struct rtcp_handler {
@@ -714,7 +717,7 @@ next:
 	CAH(finish, c, &mp->fsin, &mp->sfd->socket.local, &mp->tv);
 	CAH(destroy);
 
-	return 0;
+	return log_ctx->discard ? -1 : 0;
 
 error:
 	CAH(finish, c, &mp->fsin, &mp->sfd->socket.local, &mp->tv);
